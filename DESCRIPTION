@@ -1,0 +1,12 @@
+Package: tigers
+Version: 0.1
+Date: 2023-09-19
+Title: Tools for Integrating Geography, Environment, and Remote Sensing
+Authors@R: c(person("Emmanuel", "Paradis", role = c("aut", "cre", "cph"), email = "Emmanuel.Paradis@ird.fr", comment = c(ORCID = "0000-0003-3092-2199")))
+Depends: R (>= 3.2.0)
+Imports: stats
+ZipData: no
+Description: Functions for handling and manipulating polygons, coordinates, and other geographical objects. The tools include: polygon areas, barycentric and trilinear coordinates, convex hull for polygons, triangulation of polygons, great circle distances and geodesic distances, Hausdorff dDistance, reduced major axis.
+License: GPL-3
+URL: https://github.com/emmanuelparadis/tigers
+BugReports: https://github.com/emmanuelparadis/tigers/issues

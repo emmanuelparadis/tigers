@@ -1,0 +1,14 @@
+useDynLib(tigers, .registration = TRUE)
+
+export(area, barycoords, Cartesian2trilinear, chullPolygon,
+       convexPolygonOverlap, decomposePolygon, distance_to_arc,
+       distance_to_line, dta, dtl, gcl, geod, geoTrans, geoTrans2,
+       great_circle_line, HausdorffDistance, haveOverlap,
+       is.clockwise, is.insidePolygon, is.open, polygon2mask,
+       polygonOverlap, random_point_in_triangle, redundantVertices,
+       revPolygon, RMA, rpit, samePolygons, triangulate,
+       trilinear2Cartesian)
+
+importFrom(stats, cov, dist, runif, var)
+
+

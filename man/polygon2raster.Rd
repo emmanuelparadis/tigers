@@ -39,6 +39,11 @@ polygon2mask(XY, extent = NULL, k = 360,
   The code is still in development.
 }
 \author{Emmanuel Paradis}
+\references{
+  Nievergelt, J. and Preparata, F. P. (1982) Plane-sweep algorithms for
+  intersecting geometric figures. \emph{Communications of the ACM},
+  \bold{25}, 739--747. <doi:10.1145/358656.358681>.
+}
 \examples{
 ## from ?chullPolygon:
 XY <- rbind(c(0, 0),

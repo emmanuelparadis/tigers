@@ -32,7 +32,7 @@ text(A, labels = 1:nrow(A), font = 2, cex = 1.5, col = COLS[1])
 polygon(B)
 text(B, labels = 1:nrow(B), font = 2, cex = 1.5, col = COLS[2])
 legend("topleft", , c("A", "B"), text.font = 2, text.col = COLS)
-O <- .Call("convexPolygonOverlap_Call", A, B)
+O <- convexPolygonOverlap(A, B)
 polygon(O, border = NA, col = rgb(1, 1, 0, 0.5))
 }
 \keyword{manip}

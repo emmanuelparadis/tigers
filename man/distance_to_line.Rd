@@ -8,7 +8,7 @@
   These functions calculate the shortest distances from a set of points
   to a line (in Euclidean coordinates) or an arc (in angular coordinates).
 
-  \code{dtl} and \code{dtl} are aliases to \code{distance_to_line} and
+  \code{dtl} and \code{dta} are aliases to \code{distance_to_line} and
   \code{distance_to_arc}, respectively.
 }
 \usage{
@@ -44,7 +44,7 @@ dta(x, y = NULL, x0, y0, x1, y1, prec = 0.001)
 }
 \author{Emmanuel Paradis}
 \references{
-  \url{https://en.wikipedia.org/wiki/Distance\_from\_a\_point\_to\_a\_line}
+  \url{https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line}
 }
 \seealso{
   \code{\link{great_circle_line}}, \code{\link{geoTrans}},

@@ -68,6 +68,7 @@ points(Pxys, pch = ".", col = rgbCOLS, cex = 20)
 ## the visual effect is nicer with n <- 1e6L above and cex = 7
 ## in the last command
 
+\dontrun{
 ## the example below follows the same logic than the previous one
 
 ## an 8-vertex polygon:
@@ -92,5 +93,6 @@ rgbCOLS <- apply(COLS, 1, function(x) do.call(rgb, as.list(x)))
 rgbCOLS <- paste0(rgbCOLS, "33") # add transparency
 plot(xy, , "n", asp = 1, ann = FALSE, axes = FALSE)
 points(Pxys, pch = ".", col = rgbCOLS, cex = 5)
+}
 }
 \keyword{manip}

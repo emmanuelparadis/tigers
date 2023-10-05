@@ -6,7 +6,7 @@
   This function calculates the coordinates of the line on the surface of
   a sphere between two points. All coordinates are in decimal degrees.
 
-  \code{gcl} is simply a alias.
+  \code{gcl} is simply an alias.
 }
 \usage{
 great_circle_line(x0, y0, x1, y1, linear = FALSE, npoints = 100)

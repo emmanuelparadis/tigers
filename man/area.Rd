@@ -60,7 +60,7 @@ area(x, y = NULL, lonlat = FALSE, spheroid = TRUE)
     Conservation}, \bold{29}, 2539--2551.
 
   Paradis, E. (2023) Fast and efficient computation of geodesic polygon
-  areas. Submitted to \emph{Environmental Modelling & Software}.
+  areas. Submitted to \emph{Journal of Geodesy}.
 }
 \value{
   a single numeric value.

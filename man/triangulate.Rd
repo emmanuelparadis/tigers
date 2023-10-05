@@ -32,13 +32,12 @@ triangulate(x, y = NULL, method = 1)
   to be closed, whereas the other methods need it to be open; method 2
   needs the polygon to be in counterclockwise order, and method 3 needs
   it to be in clockwise order (the other methods are not sensitive to
-  this order [[TO BE CHECKED]]). These requirements are checked before
-  performing the triangulation and the polygon is changed internally
-  (without warning since the original polygon is not modified) if
-  necessary.
+  this order). These requirements are checked before performing the
+  triangulation and the polygon is changed internally (without warning
+  since the original polygon is not modified) if necessary.
 }
 \note{
-  The internal need to be checked and tested again.
+  The internal codes need to be checked and tested again.
 }
 \references{
   Toussaint, G. (1991) Efficient triangulation of simple

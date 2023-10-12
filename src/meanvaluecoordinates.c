@@ -1,3 +1,10 @@
+/* meanvaluecoordinates.c       2023-10-06 */
+
+/* Copyright 2023 Emmanuel Paradis */
+
+/* This file is part of the R-package `tigers'. */
+/* See the file ../DESCRIPTION for licensing issues. */
+
 #include <R.h>
 
 /* i is looped between 0 and n - 1 */

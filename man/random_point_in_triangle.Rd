@@ -19,9 +19,6 @@
   \item{rfun2}{same as the previous argument (see details).}
 }
 \details{
-  The coordinates given in \code{X} are coerced to numeric (double)
-  values.
-
   By default, the points are uniformly distributed in the triangle.
   The \code{\link[stats]{Beta}} function offers an interesting
   alternative to  generate points concentrated in a specific part of the

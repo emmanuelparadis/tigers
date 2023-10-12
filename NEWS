@@ -1,0 +1,9 @@
+		CHANGES IN TIGERS VERSION 0.1-1
+
+
+BUG FIXES
+
+    o distance_to_arc() now returns the correct answer when the point
+      (x,y) is close to an end-point of the arc.
+
+    o A memory leak in the C code of polygon2raster() has been fixed.

@@ -25,12 +25,23 @@ revPolygon(x, copy = TRUE)
   \item{tol}{the tolerance to consider two vertices identical.}
   \item{check.only}{a logical value.}
   \item{copy}{by default, a new polygon is created; if \code{FALSE}, the
-    vertex order is reversed within the same polygon.}
+    vertex order is reversed within the same object.}
 }
 \details{
-  If \code{check.only} is \code{TRUE}, the function prints the
+  If \code{check.only} is \code{TRUE}, the first function prints the
   diagnostics and nothing is returned. Otherwise, the possibly corrected
   matrix is returned.
+}
+\value{
+  \code{redundantVertices} returns a two-column numeric matrix, or
+  nothing if \code{check.only = TRUE} (the diagnostics are printed in
+  the console).
+
+  \code{is.clockwise}, \code{is.convex}, and \code{is.open} return a
+  single logical value.
+
+  \code{revPolygon} returns by default a two-column numeric matrix, or
+  nothing if \code{copy = FALSE} (the first argument is modified).
 }
 \references{
   The method for \code{is.clockwise} is from:

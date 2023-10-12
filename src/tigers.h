@@ -1,3 +1,10 @@
+/* tigers.h       2023-10-06 */
+
+/* Copyright 2023 Emmanuel Paradis */
+
+/* This file is part of the R-package `tigers'. */
+/* See the file ../DESCRIPTION for licensing issues. */
+
 #include <Rinternals.h>
 
 int circularIndex(int i, int n);

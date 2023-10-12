@@ -27,8 +27,9 @@ barycoords(XY, point)
   examples). This is likely to change in the future.
 }
 \value{
-  a numeric vector with length equal to the number of vertices in the
-  polygon.
+  a numeric vector giving the barycentric coordinates of the point
+  (second argument). The length of the returned vector is equal to the
+  number of vertices in the polygon (first argument).
 }
 \references{
   Hormann, K. and Floater, M. S. (2006) Mean value coordinates for
@@ -68,7 +69,7 @@ points(Pxys, pch = ".", col = rgbCOLS, cex = 20)
 ## the visual effect is nicer with n <- 1e6L above and cex = 7
 ## in the last command
 
-\dontrun{
+\donttest{
 ## the example below follows the same logic than the previous one
 
 ## an 8-vertex polygon:

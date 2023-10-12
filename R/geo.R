@@ -1,4 +1,4 @@
-## geo.R (2023-09-19)
+## geo.R (2023-10-12)
 
 ##   Tools for Geographic Data
 
@@ -148,11 +148,13 @@ dta <- function(x, y = NULL, x0, y0, x1, y1, prec = 0.001)
             d <- geod(rbind(x, XY))[-1L, 1L]
             ## 3. find the shortest distance
             s <- which.min(d) # should not be 1 neither 10
-            if (s == 1 || s == 10L) {
+            if (s == 1L || s == 10L) {
                 if (!d[s]) return(0)
-                stop("something wrong happened")
+                ss <- if (s == 1L) 1:2 else 9:10
+            } else {
+                ss <- s + c(-1, 1)
             }
-            xys <- XY[s + c(-1, 1), ]
+            xys <- XY[ss, ]
             ## 4. if the distance between the 2 points before and
             ## after the point found at 3. < precision, stop
             if (geod(xys)[2L] < prec) break

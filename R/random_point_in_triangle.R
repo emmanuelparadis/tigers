@@ -1,6 +1,6 @@
 ## random_point_in_triangle.R (2023-09-19)
 
-##   Draw Random Points in a Triangle
+##   Simulate Random Points in a Triangle
 
 ## Copyright 2023 Emmanuel Paradis
 

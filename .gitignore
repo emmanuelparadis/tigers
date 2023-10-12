@@ -47,3 +47,5 @@ vignettes/*.pdf
 *.Rnw~
 DESCRIPTION~
 NAMESPACE~
+NEWS~
+

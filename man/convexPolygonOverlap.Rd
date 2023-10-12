@@ -17,6 +17,10 @@ convexPolygonOverlap(A, B)
 
   The two input polygons must be in clockwise order.
 }
+\value{
+  a two-column numeric matrix giving the coordinates of the overlap
+  between the two input polygons.
+}
 \author{Emmanuel Paradis}
 \seealso{\code{\link{is.clockwise}}, \code{\link{polygonOverlap}}}
 \examples{

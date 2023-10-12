@@ -22,7 +22,10 @@ is.insidePolygon(XY, points)
   counterclockwise order. If the polygon is closed, it is modified
   internally without warning (the original polygon is not modified).
 }
-\value{a logical vector.}
+\value{
+  a logical vector indicating whether each point is inside the polygon
+  defined by \code{XY}.
+}
 \author{Emmanuel Paradis}
 \seealso{\code{\link{is.open}}}
 \examples{

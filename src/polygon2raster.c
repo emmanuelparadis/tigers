@@ -1,3 +1,10 @@
+/* polygon2raster.c       2023-10-11 */
+
+/* Copyright 2023 Emmanuel Paradis */
+
+/* This file is part of the R-package `tigers'. */
+/* See the file ../DESCRIPTION for licensing issues. */
+
 #include <R.h>
 #include <Rinternals.h>
 
@@ -63,6 +70,7 @@ SEXP singlePolygon2raster(SEXP XY, SEXP PARS, SEXP raster)
 
     /* try to allocate enough memory, maybe a better guess could be better... */
     intsct = (intersection*)R_alloc(1E6, sizeof(intersection));
+    memset(intsct, 0, 1E6 * sizeof(intersection));
 
     /* 1) Build the table of edges and intersections with horizontal lines
        h: the "highest" vertex (most north)

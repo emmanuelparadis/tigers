@@ -20,8 +20,8 @@
   \url{https://mathworld.wolfram.com/LeastSquaresFittingPerpendicularOffsets.html}
 }
 \value{
-  A single matrix with two rows and two columns named alpha and beta for
-  the intercepts and slopes, respectively.
+  a matrix with two rows and two columns named alpha and beta for the
+  intercepts and slopes, respectively.
 }
 \author{Emmanuel Paradis}
 \examples{

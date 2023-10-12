@@ -38,10 +38,13 @@ polygonOverlap(A, B)
   These two functions are still in development.
 }
 \value{
-  \code{decomposePolygon} returns a matrix with the diagonals of the
-  polygon that define convex subpolygons.
+  \code{decomposePolygon} returns a two-column matrix with integers
+  where each row gives the indices of two vertices of the input polygon
+  defining a diagonal; the set of these diagonals define convex
+  subpolygons.
 
-  \code{polygonOverlap} returns a list of polygons.
+  \code{polygonOverlap} returns a list of polygons each defined by a
+  two-column numeric matrix giving the coordinates of the vertices.
 }
 \author{Emmanuel Paradis}
 \references{

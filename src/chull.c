@@ -1,3 +1,10 @@
+/* chull.c       2023-10-06 */
+
+/* Copyright 2023 Emmanuel Paradis */
+
+/* This file is part of the R-package `tigers'. */
+/* See the file ../DESCRIPTION for licensing issues. */
+
 /* Reference: Graham and Yao 1983 J. Algo.
 
    This implementation requires the polygon to be open and in

@@ -17,7 +17,7 @@
 \details{
   If \code{directed = TRUE}, the order of the two polygons is important.
 }
-\value{A single numeric value.}
+\value{a single numeric value.}
 \author{Emmanuel Paradis}
 \examples{
 

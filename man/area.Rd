@@ -63,7 +63,7 @@ area(x, y = NULL, lonlat = FALSE, spheroid = TRUE)
   areas. Submitted to \emph{Journal of Geodesy}.
 }
 \value{
-  a single numeric value.
+  a single numeric value giving the area of the polygon.
 }
 \author{Emmanuel Paradis}
 \seealso{\code{\link{geod}}}

@@ -2,7 +2,11 @@
 \alias{chullPolygon}
 \title{Convex Hull of Polygon}
 \description{
-  ...
+  Finds the convex hull of a polygon.
+
+  Note that the function \code{chull} (see link below) finds the convex
+  hull of a set of points and is about twice slower than the present one
+  when applied to a polygon.
 }
 \usage{
 chullPolygon(x, y = NULL)
@@ -18,10 +22,11 @@ chullPolygon(x, y = NULL)
 \references{
   Graham, R. L. and Yao, F. F. (1983) Finding the convex hull of a
   simple polygon. \emph{Journal of Algorithms}, \bold{4}, 324--331.
-  <doi:10.1016/0196-6774(83)90013-5>.
+  <doi:10.1016/0196-6774(83)90013-5>
 }
 \value{
-  a vector of indices giving the convex hull.
+  a vector of integers which give the indices of the vertices of the
+  input polygon defining the convex hull.
 }
 \seealso{
   \code{\link[grDevices]{chull}}

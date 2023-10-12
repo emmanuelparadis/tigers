@@ -32,13 +32,11 @@ Cartesian2trilinear(xy, X)
   \code{trilinear2Cartesian} returns a numeric matrix with a single row
   and two columns giving the coordinates of the point.
 
-  \code{Cartesian2trilinear} returns a  a numeric matrix with a single row
+  \code{Cartesian2trilinear} returns a numeric matrix with a single row
   and three columns.
 }
 \author{Emmanuel Paradis}
-\references{
-  \url{https://en.wikipedia.org/wiki/Trilinear_coordinates}
-}
+\references{\url{https://en.wikipedia.org/wiki/Trilinear_coordinates}}
 \examples{
 ## rectangular triangle (counterclockwise):
 X <- rbind(c(0, 0), c(0, 1), c(1, 0))

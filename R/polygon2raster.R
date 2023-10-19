@@ -1,4 +1,4 @@
-## polygon2raster.R (2023-09-19)
+## polygon2raster.R (2023-10-19)
 
 ##   Polygon Rasterisation
 
@@ -35,7 +35,14 @@ polygon2mask <- function(XY, extent = NULL, k = 360,
     ## through all the raster:
     north.lim <- floor(min(XY[, 2L]))
     south.lim <- ceiling(max(XY[, 2L]))
+    if (north.lim == south.lim) {
+        ik <- unique(XY[, 1L] + NC * XY[, 2L] + 1L)
+        z[ik] <- value
+        return(z)
+    }
     PARS <- as.integer(c(NC, north.lim, south.lim, value))
     o <- .Call(singlePolygon2raster, XY, PARS, z)
-    matrix(z, NR, NC, TRUE)
+    dim(z) <- c(NC, NR)
+    z
+    ##matrix(z, NR, NC, TRUE)
 }

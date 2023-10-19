@@ -17,15 +17,12 @@ triangulate(x, y = NULL, method = 1)
   The following methods are available:
 
   \itemize{
-    \item{1}{the triangles are created in successive from the first
-    appropriate angle (i.e., an ear) encountered in the polygon.}
-
-    \item{2}{the triangles are created to favour thin triangles.}
-
-    \item{3}{the triangles are created to favour fat triangles.}
-
-    \item{4}{the triangles are created to favour regular-looking
-      triangles based on their determinant.}
+    \item 1: the triangles are created in successive order from the
+    first appropriate angle (i.e., an ear) encountered in the polygon.
+    \item 2: the triangles are created to favour thin triangles.
+    \item 3: the triangles are created to favour fat triangles.
+    \item 4: the triangles are created to favour regular-looking
+      triangles based on their determinant.
   }
 
   These methods have different requirements: method 1 needs the polygon

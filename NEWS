@@ -6,4 +6,6 @@ BUG FIXES
     o distance_to_arc() now returns the correct answer when the point
       (x,y) is close to an end-point of the arc.
 
-    o A memory leak in the C code of polygon2raster() has been fixed.
+    o A memory leak in the C code of polygon2raster() has been
+      fixed. Thin polygons (i.e., spread on a single row of polygons)
+      are also correctly handled.

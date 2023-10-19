@@ -28,8 +28,13 @@ polygon2mask(XY, extent = NULL, k = 360,
   in \pkg{terra} (e.g., \code{rast()}).
 
   \code{polygon2mask} does basically the same operation than
-  \code{terra::rasterize} but is faster and can produce a vector for
+  \code{terra::rasterize()} but is faster and can produce a vector for
   masking raster data.
+
+  The output matrix is actually row-filled (unlike most matrices in R
+  which are column-filled). It should be transposed before passed to
+  \code{terra::rast()}, or its \code{dim} attribute can be ignored if
+  used as a mask to a rasted (which is also usually row-filled).
 }
 \value{
   a matrix stored as integers; the dimensions of this matrix give the

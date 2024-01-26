@@ -1,6 +1,6 @@
-/* sim_polygons_landClasses.c       2023-10-06 */
+/* sim_polygons_landClasses.c       2024-01-26 */
 
-/* Copyright 2023 Emmanuel Paradis */
+/* Copyright 2023-2024 Emmanuel Paradis */
 
 /* This file is part of the R-package `tigers'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -12,10 +12,10 @@
 #include <Rmath.h>
 #include "tigers.h"
 
-#define BonTWO 247766915924930.75 /* B/2 */
-#define Cspheroid 0.08209454909747739 /* C */
-#define R 6371008 /* mean radius of the Earth (m) */
-#define RSQDTWO 20294871468032 /* = 0.5 * R^2 (m^2) */
+//#define BonTWO 247766915924930.75 /* B/2 */
+//#define Cspheroid 0.08209454909747739 /* C */
+//#define R 6371008 /* mean radius of the Earth (m) */
+//#define RSQDTWO 20294871468032 /* = 0.5 * R^2 (m^2) */
 #define area_triangle(x1, y1, x2, y2, x3, y3) fabs((x1 - x3)*(y2 - y1) - (x1 - x2)*(y3 - y1))/2
 
 int find_position_minimum(double *x, int n)
@@ -718,59 +718,50 @@ double areaPolygon2open(double *x, double *y, int n)
     return fabs(s)/2;
 }
 
-/* same than areaPolygon2open() but with angular (lon,lat) coordinates */
-/* x (= lon) and y (= lat) must be in radians */
-double areaPolygon2open_angular(double *x, double *y, int n)
-{
-    int a = 0, b = 1, c = 2;
-    double s = 0;
-    while (c < n) {
-	s += (x[c] - x[a]) * sin(y[b]);
-	a++; b++; c++;
-    }
-    /* handle the last two triplets */
-    s += (x[0] - x[n - 2]) * sin(y[n - 1]);
-    s += (x[1] - x[n - 1]) * sin(y[0]);
-    return fabs(s * RSQDTWO);
-}
+/* /\* same than areaPolygon2open() but with angular (lon,lat) coordinates *\/ */
+/* /\* x (= lon) and y (= lat) must be in radians *\/ */
+/* double areaPolygon2open_angular(double *x, double *y, int n) */
+/* { */
+/*     int a = 0, b = 1, c = 2; */
+/*     double s = 0; */
+/*     while (c < n) { */
+/* 	s += (x[c] - x[a]) * sin(y[b]); */
+/* 	a++; b++; c++; */
+/*     } */
+/*     /\* handle the last two triplets *\/ */
+/*     s += (x[0] - x[n - 2]) * sin(y[n - 1]); */
+/*     s += (x[1] - x[n - 1]) * sin(y[0]); */
+/*     return fabs(s * RSQDTWO); */
+/* } */
 
-double areaPolygon2open_spheroid(double *x, double *y, int n)
-{
-    int a = 0, b = 1, c = 2;
-    double s = 0;
-    while (c < n) {
-	s += (x[c] - x[a]) * atan(Cspheroid * sin(y[b]));
-	a++; b++; c++;
-    }
-    /* handle the last two triplets */
-    s += (x[0] - x[n - 2]) * atan(Cspheroid * sin(y[n - 1]));
-    s += (x[1] - x[n - 1]) * atan(Cspheroid * sin(y[0]));
-    return fabs(s * BonTWO);
-}
+/* double areaPolygon2open_spheroid(double *x, double *y, int n) */
+/* { */
+/*     int a = 0, b = 1, c = 2; */
+/*     double s = 0; */
+/*     while (c < n) { */
+/* 	s += (x[c] - x[a]) * atan(Cspheroid * sin(y[b])); */
+/* 	a++; b++; c++; */
+/*     } */
+/*     /\* handle the last two triplets *\/ */
+/*     s += (x[0] - x[n - 2]) * atan(Cspheroid * sin(y[n - 1])); */
+/*     s += (x[1] - x[n - 1]) * atan(Cspheroid * sin(y[0])); */
+/*     return fabs(s * BonTWO); */
+/* } */
 
-SEXP area_Call(SEXP XY, SEXP METHOD)
+SEXP area_Call(SEXP XY)
 {
     SEXP res;
     double *x, *y;
-    int n, *method;
-    double (*FUN)(double *x, double *y, int n);
+    int n;
 
     PROTECT(XY = coerceVector(XY, REALSXP));
-    PROTECT(METHOD = coerceVector(METHOD, INTSXP));
-    method = INTEGER(METHOD);
     n = nrows(XY);
     x = REAL(XY);
     y = x + n;
 
-    if (method[0]) {
-	FUN = method[1] ? &areaPolygon2open_spheroid : &areaPolygon2open_angular;
-    } else {
-	FUN = areaPolygon2open;
-    }
-
     PROTECT(res = allocVector(REALSXP, 1));
-    REAL(res)[0] = FUN(x, y, n);
+    REAL(res)[0] = areaPolygon2open(x, y, n);
 
-    UNPROTECT(3);
+    UNPROTECT(2);
     return res;
 }

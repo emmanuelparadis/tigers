@@ -1,6 +1,6 @@
-/* tigers.c       2023-10-06 */
+/* tigers.c       2024-01-26 */
 
-/* Copyright 2023 Emmanuel Paradis */
+/* Copyright 2023-2024 Emmanuel Paradis */
 
 /* This file is part of the R-package `tigers'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -28,7 +28,7 @@ static R_CallMethodDef Call_entries[] = {
     {"triangulate_Call", (DL_FUNC) &triangulate_Call, 2},
     {"haveOverlapTwoPolygons", (DL_FUNC) &haveOverlapTwoPolygons, 2},
     {"redundant_vertices", (DL_FUNC) &redundant_vertices, 3},
-    {"area_Call", (DL_FUNC) &area_Call, 2},
+    {"area_Call", (DL_FUNC) &area_Call, 1},
     {"rev_Call", (DL_FUNC) &rev_Call, 2},
     {"rev_2cols_Call", (DL_FUNC) &rev_2cols_Call, 2},
     {"RMA_Call", (DL_FUNC) &RMA_Call, 2},

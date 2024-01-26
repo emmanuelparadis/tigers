@@ -1,8 +1,8 @@
-## FUNs.R (2023-09-19)
+## FUNs.R (2024-01-26)
 
 ##   Various Functions
 
-## Copyright 2023 Emmanuel Paradis
+## Copyright 2023-2024 Emmanuel Paradis
 
 ## This file is part of the R-package `tigers'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -171,9 +171,8 @@ barycoords <- function(XY, point)
     res[[3]]
 }
 
-area <- function(x, y = NULL, lonlat = FALSE, spheroid = TRUE)
+area <- function(x, y = NULL)
 {
     if (!is.null(y)) x <- cbind(x, y)
-    if (lonlat) x <- x * pi/180
-    .Call(area_Call, x, as.integer(c(lonlat, spheroid)))
+    .Call(area_Call, x)
 }

@@ -1,3 +1,13 @@
+		CHANGES IN TIGERS VERSION 0.1-2
+
+
+OTHER CHANGES
+
+    o The calculations of polygon area with lon-lat coordinates has
+      been removed because of errors in the formulas.
+
+
+
 		CHANGES IN TIGERS VERSION 0.1-1
 
 

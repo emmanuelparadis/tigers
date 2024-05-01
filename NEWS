@@ -1,3 +1,25 @@
+		CHANGES IN TIGERS VERSION 0.1-3.1
+
+
+NEW FEATURES
+
+    o The functions ECEF2lonlat, lonlat2ECEF, lonlat2UTM, UTM2lonlat,
+      fast2waytable, BlackBodySpectrum, spectrum2col, wl2col, axisMap,
+      and rose have been moved from the package sentinel (which is now
+      defunct).
+
+
+
+		CHANGES IN TIGERS VERSION 0.1-3
+
+
+BUG FIXES
+
+    o is.insidePolygon() returned two values when 'points' was not a
+      matrix: the vector is now converted as a one-row matrix.
+
+
+
 		CHANGES IN TIGERS VERSION 0.1-2
 
 

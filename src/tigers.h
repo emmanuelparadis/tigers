@@ -1,10 +1,11 @@
-/* tigers.h       2024-01-26 */
+/* tigers.h       2024-04-30 */
 
 /* Copyright 2023-2024 Emmanuel Paradis */
 
 /* This file is part of the R-package `tigers'. */
 /* See the file ../DESCRIPTION for licensing issues. */
 
+#include <R.h>
 #include <Rinternals.h>
 
 int circularIndex(int i, int n);
@@ -21,4 +22,10 @@ SEXP rev_Call(SEXP x, SEXP copy);
 SEXP rev_2cols_Call(SEXP x, SEXP copy);
 SEXP RMA_Call(SEXP X, SEXP Y);
 SEXP singlePolygon2raster(SEXP XY, SEXP PARS, SEXP raster);
+void C_specrend(double *spec_intens, double *R, double *G, double *B, int *approx, int *color_system);
+int F77_NAME(wltocol)(double *WAVELEN, int *N, double *GAMMA, double *RES);
+SEXP fast2waytable_Call(SEXP X, SEXP Y, SEXP NCAT, SEXP TT);
+SEXP ECEF2lonlat_Call(SEXP XYZ);
+SEXP lonlat2UTM_Call(SEXP LON, SEXP LAT);
+SEXP UTM2lonlat_Call(SEXP EASTING, SEXP NORTHING, SEXP ZONE, SEXP HEMI);
 

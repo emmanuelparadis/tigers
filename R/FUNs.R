@@ -1,4 +1,4 @@
-## FUNs.R (2024-01-26)
+## FUNs.R (2024-01-31)
 
 ##   Various Functions
 
@@ -157,6 +157,9 @@ chullPolygon <- function(x, y = NULL)
 
 is.insidePolygon <- function(XY, points)
 {
+    if (!is.matrix(points)) dim(points) <- c(1L, 2L)
+    if (ncol(XY) < 2) stop("not enough columns in 'XY'")
+    if (ncol(points) < 2) stop("not enough columns in 'points'")
     if (!is.open(XY)) XY <- .open(XY)
     .Call(InsidePolygon_Call, XY, points)
 }

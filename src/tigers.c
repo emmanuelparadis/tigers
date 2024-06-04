@@ -1,4 +1,4 @@
-/* tigers.c       2024-04-30 */
+/* tigers.c       2024-05-31 */
 
 /* Copyright 2023-2024 Emmanuel Paradis */
 
@@ -7,6 +7,36 @@
 
 #include <R_ext/Rdynload.h>
 #include "tigers.h"
+
+/*
+   The two functions below do rectangular to polar and polar
+   to rectangular coordinates conversions, respectively
+   (they require already dimensioned arrays).
+*/
+
+void _r2p_(double *x, double *y, int n, double *r, double *angle)
+{
+    int i;
+    double lx, ly;
+    for (i = 0; i < n; i++) {
+	lx = x[i];
+	ly = y[i];
+	r[i] = sqrt(pow(lx, 2) + pow(ly, 2));
+	angle[i] = atan2(ly, lx);
+    }
+}
+
+void _p2r_(double *r, double *angle, int n, double *x, double *y)
+{
+    int i;
+    double lr, la;
+    for (i = 0; i < n; i++) {
+	lr = r[i];
+	la = angle[i];
+	x[i] = lr * cos(la);
+	y[i] = lr * sin(la);
+    }
+}
 
 /* from sim_polygons_landClasses.c */
 int circularIndex(int i, int n)
@@ -38,6 +68,8 @@ static R_CallMethodDef Call_entries[] = {
     {"ECEF2lonlat_Call", (DL_FUNC) &ECEF2lonlat_Call, 1},
     {"lonlat2UTM_Call", (DL_FUNC) &lonlat2UTM_Call, 2},
     {"UTM2lonlat_Call", (DL_FUNC) &UTM2lonlat_Call, 4},
+    {"inters_seg_seg", (DL_FUNC) &inters_seg_seg, 2},
+    {"inters_seg_arc", (DL_FUNC) &inters_seg_arc, 2},
     {NULL, NULL, 0}
 };
 

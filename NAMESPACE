@@ -1,6 +1,6 @@
 useDynLib(tigers, .registration = TRUE)
 
-export(area, axisMap, barycoords, BlackBodySpectrum,
+export(area, axisMap, barycoords, BlackBodySpectrum, buffer,
        Cartesian2trilinear, chullPolygon, convexPolygonOverlap,
        decomposePolygon, distance_to_arc, distance_to_line, dta, dtl,
        ECEF2lonlat, fast2waytable, gcl, geod, geoTrans, geoTrans2,

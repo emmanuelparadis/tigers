@@ -1,12 +1,20 @@
-		CHANGES IN TIGERS VERSION 0.1-3.1
+		CHANGES IN TIGERS VERSION 0.1-3.2
 
 
 NEW FEATURES
+
+    o The new function buffer() defines a (homogeneous) buffer zone
+      around a polygon.
 
     o The functions ECEF2lonlat, lonlat2ECEF, lonlat2UTM, UTM2lonlat,
       fast2waytable, BlackBodySpectrum, spectrum2col, wl2col, axisMap,
       and rose have been moved from the package sentinel (which is now
       defunct).
+
+    o redundantVertices() gains the option 'colinear = TRUE'.
+
+    o A data set has been included: the coordinates of the limits of
+      the Anduki Forest Reserve (Brunei).
 
 
 

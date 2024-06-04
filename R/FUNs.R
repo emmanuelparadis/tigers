@@ -1,4 +1,4 @@
-## FUNs.R (2024-01-31)
+## FUNs.R (2024-05-16)
 
 ##   Various Functions
 
@@ -136,9 +136,10 @@ samePolygons <- function(A, B, digits = 10)
     FALSE
 }
 
-redundantVertices <- function(x, tol = 1e-8, check.only = FALSE)
+redundantVertices <- function(x, tol = 1e-8, check.only = FALSE,
+                              colinear = TRUE)
 {
-    res <- .Call(redundant_vertices, x, tol, check.only)
+    res <- .Call(redundant_vertices, x, tol, c(check.only, colinear))
     if (check.only) invisible(res) else res
 }
 

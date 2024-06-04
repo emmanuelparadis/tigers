@@ -585,7 +585,7 @@ int check_identical_vertices(double *x, int n, int *red, int check)
     if (N) {
 	Rprintf("Found %d redundant ", N);
 	N == 1 ? Rprintf("vertex") : Rprintf("vertices");
-	Rprintf("\n(identical vertices are on the same line; indices are 0...n-1):\n");
+	Rprintf("\n(identical vertices are on the same row; indices are 0...n-1):\n");
 	int flag = 0;
 	for (i = 1; i < n - 1; i++) {
 	    if (red[i]) {
@@ -649,6 +649,53 @@ int check_close_vertices(double *x, int n, double tol, int *red, int check)
     return N;
 }
 
+int check_colinear_vertices(double *x, int n, double tol, int *red, int check)
+{
+    int i, j, N = 0;
+    double *y, beta0, beta1;
+
+    if (n < 3) error("not enough vertices to check colinearity");
+
+    y = x + n;
+
+    /* get the 1st slope */
+    beta0 = (y[1] - y[0]) / (x[1] - x[0]);
+
+    for (i = 1, j = 2; j < n; i++, j++) {
+	beta1 = (y[j] - y[i]) / (x[j] - x[i]);
+	if (fabs(beta0 - beta1) <= tol) {
+	    red[i] = 1;
+	    N++;
+	}
+	beta0 = beta1;
+    }
+
+    /* do the last 2 triplets */
+    beta1 = (y[n - 1] - y[0]) / (x[n - 1] - x[0]);
+    if (fabs(beta0 - beta1) <= tol) {
+	red[i] = 1;
+	N++;
+    }
+    beta0 = beta1;
+    beta1 = (y[0] - y[1]) / (x[0] - x[1]);
+    if (fabs(beta0 - beta1) <= tol) {
+	red[i] = 1;
+	N++;
+    }
+
+    if (!check) return N;
+
+    if (N) {
+	Rprintf("Found %d colinear vert", N);
+	N == 1 ? Rprintf("ex") : Rprintf("ices");
+	Rprintf(".\n");
+    } else {
+	Rprintf("No colinear vertices.\n");
+    }
+
+    return N;
+}
+
 void remove_vertices(double *x, int n, double *y, int *red)
 {
     int i, j = 0;
@@ -664,28 +711,30 @@ void remove_vertices(double *x, int n, double *y, int *red)
     }
 }
 
-SEXP redundant_vertices(SEXP POLYGON, SEXP TOL, SEXP CHECK_ONLY)
+SEXP redundant_vertices(SEXP POLYGON, SEXP TOL, SEXP PARS)
 {
-    double *x, *ptr, tol, N;
-    int n, /* method, */ check, *red;
+    double *x, *ptr, tol;
+    int n, N, check, colinear, *red;
     SEXP res;
 
     PROTECT(POLYGON = coerceVector(POLYGON, REALSXP));
-    /* PROTECT(METHOD = coerceVector(METHOD, INTSXP)); */
     PROTECT(TOL = coerceVector(TOL, REALSXP));
-    PROTECT(CHECK_ONLY = coerceVector(CHECK_ONLY, LGLSXP));
+    PROTECT(PARS = coerceVector(PARS, LGLSXP));
 
     n = nrows(POLYGON);
 
     x = REAL(POLYGON);
-    /* method = INTEGER(METHOD); */
     tol = REAL(TOL)[0];
-    check = INTEGER(CHECK_ONLY)[0];
+    check = INTEGER(PARS)[0];
+    colinear = INTEGER(PARS)[1];
 
     red = (int*)R_alloc(n, sizeof(int));
     memset(red, 0, n * sizeof(int));
 
     N = tol == 0 ? check_identical_vertices(x, n, red, check) : check_close_vertices(x, n, tol, red, check);
+
+    if (colinear)
+	N += check_colinear_vertices(x, n, tol, red, check);
 
     if (check) {
 	PROTECT(res = allocVector(INTSXP, 1));

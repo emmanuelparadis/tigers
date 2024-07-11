@@ -1,4 +1,4 @@
-/* inters.c       2024-05-31 */
+/* inters.c       2024-07-11 */
 
 /* Copyright 2024 Emmanuel Paradis */
 
@@ -226,7 +226,7 @@ int segmentArcIntersection(double *seg, double *arc, double *O)
 
 	/* 2b) the special cases */
 	if (S == 'V') {
-	    if (fabs(seg[1] - y_ctr) >= r) return 0;
+	    if (fabs(seg[0] - x_ctr) >= r) return 0;
 	    xi1 = xi2 = seg[0];
 	    yi1 = yi2 = y_ctr;
 	    tmp = sqrt(pow(r, 2) - pow(seg[0] - x_ctr, 2));
@@ -235,7 +235,7 @@ int segmentArcIntersection(double *seg, double *arc, double *O)
 	    break;
 	}
 	// if (S == 'H') {
-	if (fabs(seg[0] - x_ctr) >= r) return 0;
+	if (fabs(seg[1] - y_ctr) >= r) return 0;
 	yi1 = yi2 = seg[1];
 	xi1 = xi2 = x_ctr;
 	tmp = sqrt(r*r - pow(seg[1] - y_ctr, 2));

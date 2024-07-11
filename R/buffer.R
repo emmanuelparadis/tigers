@@ -1,4 +1,4 @@
-## buffer.R (2024-05-31)
+## buffer.R (2024-07-11)
 
 ##   Buffer Around Polygons
 
@@ -182,8 +182,9 @@ if (abs(x0 - x1) >= 1e-8 || abs(y0 - y1) >= 1e-8) {
             if (nINTS > 1) {
                 ##repeat {
                 if (ARC) {
-                    w <- which.min(atan2(x[i, 2L] - x[i + 1L, 2L], x[i, 1L] - x[i + 1L, 1L])
-                                   - atan2(DF$y - x[i + 1L, 2L], DF$x - x[i + 1L, 1L]))
+                    ##w <- which.min(atan2(x[i, 2L] - x[i + 1L, 2L], x[i, 1L] - x[i + 1L, 1L]) - atan2(DF$y - x[i + 1L, 2L], DF$x - x[i + 1L, 1L]))
+                    ## fixed 2024-07-11:
+                    w <- which.min(atan2(x[i, 2L] - y0, x[i, 1L] - x0) - atan2(DF$y - y0, DF$x - x0))
                 } else {
                     w <- which.min((x0 - DF$x)^2 + (y0 - DF$y)^2)
                 }
@@ -204,6 +205,8 @@ if (abs(x0 - x1) >= 1e-8 || abs(y0 - y1) >= 1e-8) {
 } else {
     nINTS <- 0L
 }
+        ## the algo is not supposed to move backward:
+        if (nINTS && DF$index < i) nINTS <- 0L
         ## update i and ARC (even if no vertex was added)
         if (nINTS) {
             ARC <- DF$arcORedge

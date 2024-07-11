@@ -24,10 +24,12 @@ buffer(x, r, smoothing = 1, unit = "degree", quiet = FALSE)
     of the computations.}
 }
 \details{
-  This version assumes that the coordinates in \code{x} are Euclidean.
+  This version assumes that the coordinates in \code{x} are Euclidean
+  (see examples for conversion from longitude-latitude to UTM).
 
-  The code may not work well on polygons with very complicated
-  shapes. This is still under development.
+  The code may not work very well on polygons with complicated shapes
+  and when the buffer size (argument \code{r}) is too large. This is
+  still in progress.
 }
 \value{
   a two-column numeric matrix.
@@ -47,6 +49,15 @@ legend("topleft", , c(paste("r =", R), "Anduki Forest Reserve"),
        pt.bg = c(COLS, "white"), pt.cex = 2.5, pch = 22, bty = "n")
 title("Buffers around the Anduki Forest Reserve")
 
+## a more realistic application with the same data:
+x <- lonlat2UTM(Anduki) # convert to UTM coordinates
+z <- buffer(x, 100)
+plot(z, , "n", asp = 1, xlab = "Easting", ylab = "Northing")
+title("Buffer zone of 100 m (UTM coordinates)")
+polygon(z, col = "lightgrey", lwd = 1/3)
+polygon(x, col = "white", lwd = 1/3)
+
+
 ## a concave hexagon
 x <- rbind(c(0, 0), c(0, 1), c(0.5, 0.75),
            c(1, 1), c(1, 0), c(.5, .5))
@@ -58,6 +69,16 @@ COLS <- R * 100 + 1
 for (i in seq_along(R))
     polygon(buffer(x, R[i], quiet = TRUE), col = COLS[i])
 polygon(x, col = "white")
+
+\dontrun{
+## more fancy:
+plot(z, , "n", asp = 1)
+R <- seq(r0, r0/10, length.out = 1000)
+COLS <- rainbow(1000)
+for (i in seq_along(R))
+    polygon(buffer(x, R[i], quiet = TRUE), col = COLS[i], border = NA)
+polygon(x, col = "white", border = NA)
+}
 
 ## Effect of smoothing
 layout(matrix(1:4, 2, 2, TRUE))

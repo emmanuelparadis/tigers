@@ -1,4 +1,4 @@
-/* UTM_lonlat.c    2024-04-30 */
+/* UTM_lonlat.c    2024-06-19 */
 
 /* Copyright 2024 Emmanuel Paradis */
 
@@ -11,10 +11,10 @@
 /* the constants (GRS80) */
 #define a 6378137                  /* equatorial radius in meters */
 #define f 0.003352810681183637418  /* flattening */
-#define b a * (1 - f)              /* polar radius = a * (1 - f) */
-#define e2 f * (2 - f)             /* first eccentricity squared = f * (2 - f) */
-#define n f / (2 - f)              /* third flattening */
-#define A (a / (1 + n)) * (1 + pow(n, 2) / 4 + pow(n, 4) / 64)
+#define b (a * (1 - f))            /* polar radius = a * (1 - f) */
+#define e2 (f * (2 - f))           /* first eccentricity squared = f * (2 - f) */
+#define n (f / (2 - f))            /* third flattening */
+#define A ((a / (1 + n)) * (1 + pow(n, 2) / 4 + pow(n, 4) / 64))
 
 #define rad2deg 57.2957795130823229 /* 180/pi */
 #define deg2rad 0.0174532925199433  /* pi/180 */
@@ -62,9 +62,9 @@ static double delta[] = {0,
 #define E0 500000 /* in km */
 
 /* other constants */
-#define const1 2 * sqrt(n) / (1 + n)
-#define const2 (1 - n) / (1 + n)
-#define const3 k0 * A
+#define const1 (2 * sqrt(n) / (1 + n))
+#define const2 ((1 - n) / (1 + n))
+#define const3 (k0 * A)
 
 inline int getUTMzone(double lon, double lat, double *lambda0)
 {

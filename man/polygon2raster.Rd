@@ -31,17 +31,18 @@ polygon2mask(XY, extent = NULL, k = 360,
   \code{terra::rasterize()} but is faster and can produce a vector for
   masking raster data.
 
-  The output matrix is actually row-filled (unlike most matrices in R
-  which are column-filled). It should be transposed before passed to
+  The output matrix is row-filled, unlike matrices in R which are
+  column-filled. It should be transposed before passed to
   \code{terra::rast()}, or its \code{dim} attribute can be ignored if
-  used as a mask to a rasted (which is also usually row-filled).
+  used as a mask to a raster (which is also usually row-filled).
 }
 \value{
   a matrix stored as integers; the dimensions of this matrix give the
   size of the raster.
 }
 \note{
-  The code is still in development.
+  The code is still in development. The version in \pkg{tigers} 0.1-3.3
+  has larger C buffers which should make the overall code more stable.
 }
 \author{Emmanuel Paradis}
 \references{

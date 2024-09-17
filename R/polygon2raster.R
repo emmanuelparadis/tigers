@@ -1,8 +1,8 @@
-## polygon2raster.R (2023-10-19)
+## polygon2raster.R (2024-09-16)
 
 ##   Polygon Rasterisation
 
-## Copyright 2023 Emmanuel Paradis
+## Copyright 2023-2024 Emmanuel Paradis
 
 ## This file is part of the R-package `tigers'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -38,10 +38,10 @@ polygon2mask <- function(XY, extent = NULL, k = 360,
     if (north.lim == south.lim) {
         ik <- unique(XY[, 1L] + NC * XY[, 2L] + 1L)
         z[ik] <- value
-        return(z)
+    } else {
+        PARS <- as.integer(c(NC, north.lim, south.lim, value))
+        o <- .Call(singlePolygon2raster, XY, PARS, z)
     }
-    PARS <- as.integer(c(NC, north.lim, south.lim, value))
-    o <- .Call(singlePolygon2raster, XY, PARS, z)
     dim(z) <- c(NC, NR)
     z
     ##matrix(z, NR, NC, TRUE)

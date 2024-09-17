@@ -8,6 +8,9 @@
 #include <R.h>
 #include <Rinternals.h>
 
+#define BUFFER_INTS 1E6
+#define BUFFER_X 1E6
+
 /* The coordinates of the polygon are converted beforehand (in R for
    the moment) so that (0,0) is the center of the top-left pixel of
    the raster; the X-coordinates increase eastward, and the
@@ -69,8 +72,8 @@ SEXP singlePolygon2raster(SEXP XY, SEXP PARS, SEXP raster)
     z = INTEGER(raster);
 
     /* try to allocate enough memory, maybe a more accurate guess could be better... */
-    intsct = (intersection*)R_alloc(1E6, sizeof(intersection));
-    memset(intsct, 0, 1E6 * sizeof(intersection));
+    intsct = (intersection*)R_alloc(BUFFER_INTS, sizeof(intersection));
+    memset(intsct, 0, BUFFER_INTS * sizeof(intersection));
 
     /* 1) Build the table of edges and intersections with horizontal lines
        h: the "highest" vertex (most north)
@@ -110,7 +113,7 @@ SEXP singlePolygon2raster(SEXP XY, SEXP PARS, SEXP raster)
     qsort(intsct, k, sizeof(struct intersection), comp__);
 
     /* 3) move southward from the north limit of the raster */
-    buffer_of_X = (double*)R_alloc(1000, sizeof(double));
+    buffer_of_X = (double*)R_alloc(BUFFER_X, sizeof(double));
     y = north;
     j = 0;
     while (intsct[j].y != y) j++;

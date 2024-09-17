@@ -1,4 +1,4 @@
-		CHANGES IN TIGERS VERSION 0.1-3.2
+		CHANGES IN TIGERS VERSION 0.1-3.3
 
 
 NEW FEATURES
@@ -15,6 +15,12 @@ NEW FEATURES
 
     o A data set has been included: the coordinates of the limits of
       the Anduki Forest Reserve (Brunei).
+
+
+BUG FIXES
+
+    o polygon2mask() has a modified internal C code with larger
+      buffers which should make the function more stable.
 
 
 

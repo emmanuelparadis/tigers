@@ -1,4 +1,4 @@
-/* sim_polygons_landClasses.c       2024-01-26 */
+/* sim_polygons_landClasses.c       2024-09-17 */
 
 /* Copyright 2023-2024 Emmanuel Paradis */
 
@@ -654,7 +654,10 @@ int check_colinear_vertices(double *x, int n, double tol, int *red, int check)
     int i, j, N = 0;
     double *y, beta0, beta1;
 
-    if (n < 3) error("not enough vertices to check colinearity");
+    if (n < 3) {
+	warning("less than 3 vertices: cannot check colinearity");
+	return 0;
+    }
 
     y = x + n;
 

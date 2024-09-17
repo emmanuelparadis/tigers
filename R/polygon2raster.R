@@ -1,4 +1,4 @@
-## polygon2raster.R (2024-09-16)
+## polygon2raster.R (2024-09-17)
 
 ##   Polygon Rasterisation
 
@@ -29,14 +29,14 @@ polygon2mask <- function(XY, extent = NULL, k = 360,
     ## transform the coordinates (see C code for details):
     XY[, 1L] <- XY[, 1L] - west
     XY[, 2L] <- north - XY[, 2L]
-    XY <- round(XY*k + 0.5/k)
+    XY <- floor(XY*k + 0.5/k) # replaced round() by floor() (2024-09-17)
     XY <- redundantVertices(XY, tol = 0)
     ## get the horizontal limits of polygon to avoid scanning
     ## through all the raster:
     north.lim <- floor(min(XY[, 2L]))
     south.lim <- ceiling(max(XY[, 2L]))
     if (north.lim == south.lim) {
-        ik <- unique(XY[, 1L] + NC * XY[, 2L] + 1L)
+        ik <- unique(XY[, 2L] * NC + XY[, 1L] + 1L) # XY[, 1L] + NC * XY[, 2L] + 1L)
         z[ik] <- value
     } else {
         PARS <- as.integer(c(NC, north.lim, south.lim, value))

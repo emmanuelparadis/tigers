@@ -8,8 +8,8 @@ NEW FEATURES
 
     o The functions ECEF2lonlat, lonlat2ECEF, lonlat2UTM, UTM2lonlat,
       fast2waytable, BlackBodySpectrum, spectrum2col, wl2col, axisMap,
-      and rose have been moved from the package sentinel (which is now
-      defunct).
+      and rose have been moved from the (now defunct) package sentinel
+      to tigers.
 
     o redundantVertices() gains the option 'colinear = TRUE'.
 

@@ -69,7 +69,7 @@ lonlat2ECEF <- function(lon, lat = NULL, alt = 0, as.matrix = TRUE)
 
 ECEF2lonlat <- function(x, y = NULL, z = NULL)
 {
-    if (is.null(y) & is.null(z))
+    if (!is.null(y) && !is.null(z))
         x <- cbind(x, y, z)
     if (ncol(x) < 3) stop("'x' should have at least 3 columns")
     res <- .Call(ECEF2lonlat_Call, x)

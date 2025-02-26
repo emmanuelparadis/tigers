@@ -1,8 +1,8 @@
-## triangulate.R (2023-09-19)
+## triangulate.R (2025-02-26)
 
 ##   Polygon Triangulation
 
-## Copyright 2023 Emmanuel Paradis
+## Copyright 2023-2025 Emmanuel Paradis
 
 ## This file is part of the R-package `tigers'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -16,17 +16,28 @@ is.open <- function(x) any(x[1L, ] != x[nrow(x), ])
 triangulate <- function(x, y = NULL, method = 1)
 {
     method <- as.integer(method)
-    if (method > 4)
-        stop("method should be an integer between 1 and 4")
+    if (method < 1 || method > 2)
+        stop("method should be 1 or 2")
     if (!is.null(y)) x <- cbind(x, y)
     o <- is.open(x)
     cw <- is.clockwise(x)
+    wasClosed <- wasReversed <- FALSE # two indicators
     if (method == 1) {
-        if (o) x <- .close(x)
+        if (o) {
+            x <- .close(x)
+            wasClosed <- TRUE
+            N <- nrow(x) # one row was added
+        }
     } else {
         if (!o) x <- .open(x)
     }
-    if ((method == 2 && cw) || (method == 3 && !cw))
+    if (method == 2 && cw) {
         x <- revPolygon(x)
-    .Call(triangulate_Call, x, method) + 1L
+        wasReversed <- TRUE
+        n <- nrow(x) - as.integer(wasClosed)
+    }
+    res <- .Call(triangulate_Call, x, method) + 1L
+    if (wasClosed) res[res == N] <- 1L
+    if (wasReversed) res[] <- (n:1)[as.vector(res)]
+    res
 }

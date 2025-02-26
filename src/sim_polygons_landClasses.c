@@ -1,6 +1,6 @@
-/* sim_polygons_landClasses.c       2024-09-17 */
+/* sim_polygons_landClasses.c       2025-02-26 */
 
-/* Copyright 2023-2024 Emmanuel Paradis */
+/* Copyright 2023-2025 Emmanuel Paradis */
 
 /* This file is part of the R-package `tigers'. */
 /* See the file ../DESCRIPTION for licensing issues. */
@@ -12,12 +12,16 @@
 #include <Rmath.h>
 #include "tigers.h"
 
+/* from inters.c */
+int segmentIntersectionBIS(double *A, double *B, double *O);
+
 //#define BonTWO 247766915924930.75 /* B/2 */
 //#define Cspheroid 0.08209454909747739 /* C */
 //#define R 6371008 /* mean radius of the Earth (m) */
 //#define RSQDTWO 20294871468032 /* = 0.5 * R^2 (m^2) */
-#define area_triangle(x1, y1, x2, y2, x3, y3) fabs((x1 - x3)*(y2 - y1) - (x1 - x2)*(y3 - y1))/2
+//#define area_triangle(x1, y1, x2, y2, x3, y3) fabs((x1 - x3)*(y2 - y1) - (x1 - x2)*(y3 - y1))/2
 
+/*
 int find_position_minimum(double *x, int n)
 {
     int i, res = 0;
@@ -32,7 +36,7 @@ int find_position_minimum(double *x, int n)
 
     return res;
 }
-
+*/
 int find_position_maximum(double *x, int n)
 {
     int i, res = 0;
@@ -95,12 +99,11 @@ long double areaPolygon2(int pathlength, int *path, double *x, double *y)
     long double s = 0;
     a = path[0];
     for (i = 1; i < pathlength; i++) {
-	/* a = path[i - 1]; */
 	b = path[i];
 	s += x[a] * y[b] - x[b] * y[a];
 	a = b;
     }
-    //return fabsl(s)/2;
+    /* return fabsl(s)/2; */
     return s;
 }
 
@@ -178,14 +181,13 @@ int isEar(int pathlength, int *path, double *x, double *y, int P, long double S,
 }
 
 /* the path must be closed */
-int * triangulate_polygon(int pathlength, int *path, double *x, double *y)
+void triangulate_polygon(int pathlength, int *path, double *x, double *y, int *res)
 {
-    int i, j, m, n, N, *newpath, *res;
+    int i, j, m, n, N, *newpath;
     long double Parea, D;
     n = pathlength;
     Parea = areaPolygon2(n, path, x, y);
     N = n - 3; /* number of triangles  */
-    res = (int*)R_alloc(3 * N, sizeof(int));
     newpath = (int*)R_alloc(n, sizeof(int));
     memcpy(newpath, path, n * sizeof(int));
     m = 0;
@@ -205,17 +207,11 @@ int * triangulate_polygon(int pathlength, int *path, double *x, double *y)
 		break;
 	    }
 	}
-	/* if (n == 6) { */
-	/*     for (int ii = 0; ii < 6; ii++) */
-	/* 	Rprintf("x=%f  y=%f\n", x[newpath[ii]], y[newpath[ii]]); */
-	/*     return res; */
-	/* } */
     }
     /* export the last triangle */
     res[m] = newpath[0];
     res[m + N] = newpath[1];
     res[m + 2*N] = newpath[2];
-    return res;
 }
 
 double angle_direction_change(int v1, int v2, int v3, double *x, double *y)
@@ -238,14 +234,36 @@ double angle_direction_change(int v1, int v2, int v3, double *x, double *y)
     return res;
 }
 
-/* the path of vertices must be open and in counterclockwise order*/
-int * triangulate_polygon_thin(int pathlength, int *path, double *x, double *y)
+/* the path of vertices must be open */
+int segment_inside_polygon
+(int pathlength, int *path, double *x, double *y, int a, int c)
 {
-    int i, j, m, n, N, a, b, c, *newpath, *res;
+    int i = 0, j, k;
+    double A[4], B[4], O[2];
+
+    /* A is the segments [a,c] */
+    A[0] = x[a]; A[1] = y[a]; A[2] = x[c]; A[3] = y[c];
+
+    for (i = 0; i < pathlength; i++) {
+	if (i == a || i == c) continue;
+	j = circularIndex(i + 1, pathlength);
+	if (j == a || j == c) continue;
+	B[0] = x[i]; B[1] = y[i]; B[2] = x[j]; B[3] = y[j];
+	if (segmentIntersectionBIS(A, B, O)) return 0;
+    }
+
+    return 1;
+}
+
+/* the path of vertices must be open and in counterclockwise order*/
+void triangulate_polygon_thin(int pathlength, int *path, double *x, double *y, int *res)
+{
+    int i, j, k, n, N, a, b, c, *newpath;
     double *angle;
-    n = pathlength;
+
+    n = pathlength; /* updated below */
     N = n - 2; /* number of triangles */
-    res = (int*)R_alloc(3 * N, sizeof(int));
+
     angle = (double*)R_alloc(n, sizeof(double));
     newpath = (int*)R_alloc(n, sizeof(int));
     memcpy(newpath, path, n * sizeof(int));
@@ -259,19 +277,17 @@ int * triangulate_polygon_thin(int pathlength, int *path, double *x, double *y)
 	a = b;
 	b = c;
     }
+    /* do the last angle: */
     c = path[0];
     angle[n - 1] = angle_direction_change(a, b, c, x, y);
 
-    m = 0;
+    k = 0;
     while (n > 3) {
 	i = find_position_maximum(angle, n);
-	/* if (angle[i] < 0) */
-	//Rprintf("i = %d, angle = %f, n = %d\n", i, angle[i], n);
-	//for (int ii = 0; ii < n; ii++) Rprintf("%d ", newpath[ii]); Rprintf("\n");
-	res[m] = newpath[i]; /* should be 0 <= i < n */
-	res[m + N] = newpath[circularIndex(i - 1, n)]; /* in case i = 0 */
-	res[m + 2*N] = newpath[circularIndex(i + 1, n)]; /* in case i = n - 1 */
-	m++;
+	res[k] = newpath[i]; /* should be 0 <= i < n */
+	res[k + N] = newpath[circularIndex(i - 1, n)]; /* in case i = 0 */
+	res[k + 2*N] = newpath[circularIndex(i + 1, n)]; /* in case i = n - 1 */
+	k++;
 	/* update the path by removing vertex i */
 	for (j = i; j < n - 1; j++) {
 	    newpath[j] = newpath[j + 1];
@@ -281,219 +297,70 @@ int * triangulate_polygon_thin(int pathlength, int *path, double *x, double *y)
 
 	/* update the two angles that are affected by the clipping */
 	j = circularIndex(i - 1, n);
-	//Rprintf("i = %d\tj = %d\tn = %d\n", i, j, n);
 	a = newpath[circularIndex(i - 2, n)];
 	b = newpath[j];
 	c = newpath[i]; /* we should have 0 <= i < n */
-	angle[j] = angle_direction_change(a, b, c, x, y);
+
+	/* check that the segment [a,c] is inside the original polygon
+	   by checking that all vertices between a and c are on the
+	   left of [a,c] */
+	if (!segment_inside_polygon(pathlength, path, x, y, a, c)) {
+	    angle[j] = R_NegInf;
+	} else {
+	    angle[j] = angle_direction_change(a, b, c, x, y);
+	}
 	a = b;
 	b = c;
 	c = newpath[circularIndex(i + 1, n)];
-	angle[i] = angle_direction_change(a, b, c, x, y);
+
+	if (!segment_inside_polygon(pathlength, path, x, y, a, c)) {
+	    angle[i] = R_NegInf;
+	} else {
+	    angle[i] = angle_direction_change(a, b, c, x, y);
+	}
     }
 
     /* export the last triangle */
-    res[m] = newpath[0];
-    res[m + N] = newpath[1];
-    res[m + 2*N] = newpath[2];
-
-    return res;
-}
-
-double calculate_fatness(int v1, int v2, int v3, double *x, double *y)
-{
-    double a, b, c, tmp;
-
-    a = x[v1] - x[v2];
-    a *= a;
-    tmp = y[v1] - y[v2];
-    a += tmp * tmp;
-    a = sqrt(a);
-
-    b = x[v1] - x[v3];
-    b *= b;
-    tmp = y[v1] - y[v3];
-    b += tmp * tmp;
-    b = sqrt(b);
-
-    c = x[v2] - x[v3];
-    c *= c;
-    tmp = y[v2] - y[v3];
-    c += tmp * tmp;
-    c = sqrt(c);
-
-    tmp = (a+b+c)/3;
-    a -= tmp;
-    b -= tmp;
-    c -= tmp;
-    return (a*a + b*b + c*c)/3;
-
-    //    return a * (a/2 - b) + b * (b/2 - c) + c * (c/2 - a);
-}
-
-/* path of vertices must be open and in clockwise order */
-int * triangulate_polygon_fat(int pathlength, int *path, double *x, double *y)
-{
-    int i, j, m, n, N, a, b, c, *newpath, *res;
-    double *fatness;
-    long double Parea, D;
-    n = pathlength;
-    Parea = areaPolygon2(n, path, x, y);
-    N = n - 2; /* number of triangles  */
-    res = (int*)R_alloc(3 * N, sizeof(int));
-    fatness = (double*)R_alloc(n, sizeof(double));
-    newpath = (int*)R_alloc(n, sizeof(int));
-    memcpy(newpath, path, n * sizeof(int));
-
-    /* compute all triangle fatness */
-    a = path[n - 1];
-    b = path[0];
-    for (i = 0; i < n - 1; i++) {
-	c = path[i + 1];
-	fatness[i] = isEar(n, path, x, y, i, Parea, &D) ? calculate_fatness(a, b, c, x, y) : R_PosInf;
-	a = b;
-	b = c;
-    }
-    c = path[0];
-    fatness[n - 1] = isEar(n, path, x, y, n - 1, Parea, &D) ? calculate_fatness(a, b, c, x, y) : R_PosInf;
-
-    m = 0;
-    while (n > 3) {
-	i = find_position_minimum(fatness, n);
-	//	Rprintf("i = %d   fatness[i] = %f\n", i, fatness[i]);
-	res[m] = newpath[i];
-	res[m + N] = newpath[circularIndex(i - 1, n)];
-	res[m + 2*N] = newpath[circularIndex(i + 1, n)];
-	/* update the path by removing the vertex i */
-	for (j = i; j < n - 1; j++) {
-	    newpath[j] = newpath[j + 1];
-	}
-
-	m++;
-	n--;
-
-	Parea = areaPolygon2(n, path, x, y);
-
-	a = path[n - 1];
-	b = path[0];
-	for (i = 0; i < n - 1; i++) {
-	    c = path[i + 1];
-	    fatness[i] = isEar(n, newpath, x, y, i, Parea, &D) ? calculate_fatness(a, b, c, x, y) : R_PosInf;
-	    a = b;
-	    b = c;
-	}
-	c = path[0];
-	fatness[n - 1] = isEar(n, newpath, x, y, n - 1, Parea, &D) ? calculate_fatness(a, b, c, x, y) : R_PosInf;
-    }
-
-    /* export the last triangle */
-    res[m] = newpath[0];
-    res[m + N] = newpath[1];
-    res[m + 2*N] = newpath[2];
-
-    return res;
-}
-
-int * triangulate_polygon_det(int pathlength, int *path, double *x, double *y)
-{
-    int i, j, m, n, N, a, b, c, *newpath, *res;
-    double *det;
-    n = pathlength;
-    N = n - 2; /* number of triangles  */
-    res = (int*)R_alloc(3 * N, sizeof(int));
-    det = (double*)R_alloc(n, sizeof(double));
-    newpath = (int*)R_alloc(n, sizeof(int));
-    memcpy(newpath, path, n * sizeof(int));
-
-    /* compute all triangle determinants (= signed areas) */
-    a = path[n - 1];
-    b = path[0];
-    for (i = 0; i < n - 1; i++) {
-	c = path[i + 1];
-	det[i] = (x[b] - x[a])*(y[c] - y[a]) - (x[c] - x[a])*(y[b] - y[a]);
-	a = b;
-	b = c;
-    }
-    c = path[0];
-    det[n - 1] = (x[b] - x[a])*(y[c] - y[a]) - (x[c] - x[a])*(y[b] - y[a]);
-
-    m = 0;
-    while (n > 3) {
-	i = find_position_maximum(det, n);
-	res[m] = newpath[i];
-	res[m + N] = newpath[circularIndex(i - 1, n)];
-	res[m + 2*N] = newpath[circularIndex(i + 1, n)];
-	m++;
-	/* update the path by removing the vertex i */
-	for (j = i; j < n - 1; j++) {
-	    newpath[j] = newpath[j + 1];
-	    det[j] = det[j + 1];
-	}
-	n--;
-
-	/* update the two angles that are affected */
-	j = circularIndex(i - 1, n);
-	a = newpath[circularIndex(i - 2, n)];
-	b = newpath[j];
-	c = newpath[i]; /* we should have 0 <= i < n */
-	det[j] = (x[b] - x[a])*(y[c] - y[a]) - (x[c] - x[a])*(y[b] - y[a]);
-	a = b;
-	b = c;
-	c = newpath[circularIndex(i + 1, n)];
-	det[i] = (x[b] - x[a])*(y[c] - y[a]) - (x[c] - x[a])*(y[b] - y[a]);
-    }
-
-    /* export the last triangle */
-    res[m] = newpath[0];
-    res[m + N] = newpath[1];
-    res[m + 2*N] = newpath[2];
-
-    return res;
+    res[k] = newpath[0];
+    res[k + N] = newpath[1];
+    res[k + 2*N] = newpath[2];
 }
 
 SEXP triangulate_Call(SEXP XY, SEXP METHOD)
 {
     double *x, *y;
-    int i, pathlength, *path, *res, method, S;
-    SEXP v;
+    int i, n, *path, *v, method, S = 2;
+    SEXP res;
 
     /* S=3 if the path is closed, S=2 if open */
 
     PROTECT(XY = coerceVector(XY, REALSXP));
     PROTECT(METHOD = coerceVector(METHOD, INTSXP));
-    pathlength = nrows(XY);
-    path = (int*)R_alloc(pathlength, sizeof(int));
-    for (i = 0; i < pathlength; i++) path[i] = i;
+    n = nrows(XY);
+    path = (int*)R_alloc(n, sizeof(int));
+    for (i = 0; i < n; i++) path[i] = i;
     x = REAL(XY);
-    y = x + pathlength;
+    y = x + n;
     method = INTEGER(METHOD)[0];
+
+    if (method == 1) S++;
+
+    PROTECT(res = allocMatrix(INTSXP, n - S, 3));
+    v = INTEGER(res);
+
     switch(method) {
     case 1: {
-	res = triangulate_polygon(pathlength, path, x, y);
-	S = 3;
+	triangulate_polygon(n, path, x, y, v);
 	break;
     }
     case 2: {
-	res = triangulate_polygon_thin(pathlength, path, x, y);
-	S = 2;
-	break;
-    }
-    case 3: {
-	res = triangulate_polygon_fat(pathlength, path, x, y);
-	S = 2;
-	break;
-    }
-    case 4: {
-	res = triangulate_polygon_det(pathlength, path, x, y);
-	S = 2;
+	triangulate_polygon_thin(n, path, x, y, v);
 	break;
     }
     }
 
-    PROTECT(v = allocMatrix(INTSXP, pathlength - S, 3));
-    memcpy(INTEGER(v), res, 3 * (pathlength - S) * sizeof(int));
     UNPROTECT(3);
-    return v;
+    return res;
 }
 
 SEXP haveOverlapTwoPolygons(SEXP P, SEXP Q)
@@ -536,7 +403,8 @@ SEXP haveOverlapTwoPolygons(SEXP P, SEXP Q)
 	path = (int*)R_alloc(n, sizeof(int));
 	for (i = 0; i < n; i++) path[i] = i;
 	//Rprintf(" calling triangulate_polygon()...");
-	tri = triangulate_polygon(n, path, x, y);
+	tri = (int*)R_alloc(3 * N, sizeof(int));
+	triangulate_polygon(n, path, x, y, tri);
 	//Rprintf(" done.\n");
     }
 

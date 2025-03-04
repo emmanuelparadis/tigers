@@ -1,8 +1,8 @@
-## polygon2raster.R (2024-09-17)
+## polygon2raster.R (2025-03-04)
 
 ##   Polygon Rasterisation
 
-## Copyright 2023-2024 Emmanuel Paradis
+## Copyright 2023-2025 Emmanuel Paradis
 
 ## This file is part of the R-package `tigers'.
 ## See the file ../DESCRIPTION for licensing issues.
@@ -23,20 +23,21 @@ polygon2mask <- function(XY, extent = NULL, k = 360,
     }
     NC <- (east - west) * k
     NR <- (north - south) * k
+    if (NR == 1 && NC == 1) return(matrix(value, 1L, 1L))
     z <- integer(NR * NC)
     if (!identical(backgrd, 0L)) z[] <- as.integer(backgrd)
     if (is.open(XY)) XY <- .close(XY)
     ## transform the coordinates (see C code for details):
     XY[, 1L] <- XY[, 1L] - west
     XY[, 2L] <- north - XY[, 2L]
-    XY <- floor(XY*k + 0.5/k) # replaced round() by floor() (2024-09-17)
+    XY <- ceiling(k * XY) # continuous -> gridded coordinates
     XY <- redundantVertices(XY, tol = 0)
     ## get the horizontal limits of polygon to avoid scanning
     ## through all the raster:
     north.lim <- floor(min(XY[, 2L]))
     south.lim <- ceiling(max(XY[, 2L]))
     if (north.lim == south.lim) {
-        ik <- unique(XY[, 2L] * NC + XY[, 1L] + 1L) # XY[, 1L] + NC * XY[, 2L] + 1L)
+        ik <- unique((XY[, 2L] - 1L) * NC + XY[, 1L])
         z[ik] <- value
     } else {
         PARS <- as.integer(c(NC, north.lim, south.lim, value))

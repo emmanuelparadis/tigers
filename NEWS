@@ -25,7 +25,7 @@ BUG FIXES
 
 OTHER CHANGES
 
-    o In triangulate(), the methods 3 and 4 have been removed.
+    o In triangulate(), method = 3 and 4 have been removed.
 
 
 
